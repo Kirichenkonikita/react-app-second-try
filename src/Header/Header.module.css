@@ -1,0 +1,18 @@
+.headerContainer {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    align-items: center;
+
+    height: 250px;
+
+    border: 1px solid black;
+}
+.headerLogoIcon {
+    height: 200px;
+    width: auto;
+
+    padding: 5px;
+
+    border: 1px solid black;
+};
+

@@ -1,0 +1,12 @@
+.navContainer li {
+    list-style-type: none;
+}
+
+.navContainer a {
+    text-decoration: none;
+    color: rgb(165, 71, 17);
+}
+
+.navContainer a:active {
+    color: red;
+}

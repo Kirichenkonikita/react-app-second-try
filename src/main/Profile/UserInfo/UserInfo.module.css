@@ -1,0 +1,32 @@
+.userInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+
+    grid-template-areas: 
+    "img h4 h4 h4 h4"
+    "img textInfo textInfo textInfo textInfo"
+    ;
+}
+
+.userInfoContainer img {
+    grid-area: img;
+    place-self: stretch;
+
+    max-height: 250px;
+}
+
+.userInfoContainer textInfo {
+    display: block;
+    grid-area: textInfo;
+}
+
+.userTextInfo {
+    background-color: brown;
+
+    grid-area: textInfo;
+}
+
+.userTextInfo li {
+    list-style-type: none;
+}
