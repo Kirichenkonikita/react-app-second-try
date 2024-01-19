@@ -1,8 +1,10 @@
 import { combineReducers, createStore } from "redux";
-import MyPosts from "./reducers/Profile/MyPosts/MyPosts";
+import MyPostsReducer from "./reducers/Profile/MyPosts/MyPostsReducer";
+import UsersReducer from "./reducers/Users/UsersReducer";
 
 const reducers = combineReducers({
-    MyPosts,
+    MyPosts: MyPostsReducer,
+    Users: UsersReducer,
 })
 
 const store = createStore(reducers);

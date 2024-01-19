@@ -19,10 +19,9 @@ const initialMyPostsState = {
     postsArr: [],
 };
 
-function MyPosts(state = initialMyPostsState, action) {
+export default function MyPostsReducer(state = initialMyPostsState, action) {
     switch (action.type) {
         case UPDATE_TEXTAREA_VALUE:
-            console.log(state);
             return {
                 ...state,
                 textareaValue: action.newValue,
@@ -45,4 +44,3 @@ function MyPosts(state = initialMyPostsState, action) {
     }
 }
 
-export default MyPosts;
