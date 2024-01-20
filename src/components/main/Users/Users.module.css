@@ -1,0 +1,27 @@
+.UsersContainer {
+    padding: 10px;
+}
+.pageSwitchersContainer {
+    padding: 10px;
+    border: solid black 1px;
+    height: 40px;
+}
+
+.pageSwitcher {
+    display: inline-block;
+
+    height: 20px;
+    width: 20px;
+    padding: 5px;
+    margin: 0 10px 0 0;
+
+    border: 1px solid black;
+}
+
+
+.activePage {
+    font-weight: bolder;
+}
+.unActivePage {
+    font-weight: lighter;
+}

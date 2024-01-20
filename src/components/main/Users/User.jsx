@@ -1,48 +1,48 @@
+import React from "react";
 import userImage from "./230263-200.png";
 import classNameObj from "./User.module.css";
 
-function User(props) {
-    console.log("в User приходит", props)
-
-    function onClick(event) {
-        props.followed ?
-            props.unFollow(props.id) :
-            props.follow(props.id)
+class User extends React.Component {
+    onClick = (event) => {
+        this.props.followed ?
+            this.props.unFollow(this.props.id) :
+            this.props.follow(this.props.id)
     }
-
-    return (
-        <div className={classNameObj.UserContainer}>
-            <div className={classNameObj.UserLeftContainer}>
-                <img src={
-                    props.photos.small ?
-                        props.photos.small :
-                        userImage
-                }
-                    alt="Аватарка пользователя"
-                />
-            <button onClick={onClick}>
-                {props.followed ? "Отписаться" : "Подписаться"}
-            </button>
-            </div>
-
-            <div>
-                <h3>
-                    {
-                    props.name? 
-                    props.name :
-                    "Имя пользователя"
+    render() {
+        return (
+            <div className={classNameObj.UserContainer}>
+                <div className={classNameObj.UserLeftContainer}>
+                    <img src={
+                        this.props.photos.small ?
+                            this.props.photos.small :
+                            userImage
                     }
+                        alt="Аватарка пользователя"
+                    />
+                    <button onClick={this.onClick}>
+                        {this.props.followed ? "Отписаться" : "Подписаться"}
+                    </button>
+                </div>
+
+                <div>
+                    <h3>
+                        {
+                            this.props.name ?
+                                this.props.name :
+                                "Имя пользователя"
+                        }
                     </h3>
-                <p>
-                    {
-                    props.status ?
-                    props.status :
-                    "Статус пользователя отсутствует"
-                    }
+                    <p>
+                        {
+                            this.props.status ?
+                                this.props.status :
+                                "Статус пользователя отсутствует"
+                        }
                     </p>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default User;
