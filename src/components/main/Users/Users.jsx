@@ -18,7 +18,8 @@ class Users extends React.Component {
                     <p className={
                         item === this.props.currentActivePage ?
                             classNameObj.activePage :
-                            classNameObj.unActivePage}>
+                            classNameObj.unActivePage}
+                        onClick={this.pageSwitcherCC(item)}>
                         {item}
                     </p>
                 </div>
@@ -47,30 +48,68 @@ class Users extends React.Component {
 
         return UsersArr;
     }
-    getUsers(usersAmountDisplayed, currentActivePage, term) {
+    getUsers() {
         let url = "https://social-network.samuraijs.com/api/1.0/users"
 
-        if (usersAmountDisplayed) {
-            url = url + "?" + usersAmountDisplayed;
-        }
-        if (currentActivePage) {
-            url = url + "&" + currentActivePage;
-        }
-        if (term) {
-            url = url + "&" + term;
-        }
+        url = url + "?count=" + this.props.usersAmountDisplayed + "&page=" + this.props.currentActivePage;
 
+        if (this.term) {
+            url = url + "&term=" + this.term;
+        }
         axios.get(url)
             .then(response => {
-                this.props.setUsers(response.data.items)
+                this.props.setTotalUsersAmount(response.data.totalCount);
+                this.props.setUsers(response.data.items)                             
             });
     }
+    userAmountSwitcherCC(usersAmountDisplayed) {
+        return () => {
+            new Promise((resolve) => {
+                this.props.setUsersAmountDisplayed(usersAmountDisplayed);
+                resolve();
+            }).then(() => this.getUsers())
+        }
+    }
+    pageSwitcherCC(pageNumber) {
+        return () => {
+            new Promise((resolve) => {
+                this.props.setCurrentActivePage(pageNumber);
+                resolve();
+            }).then(() => this.getUsers())
+        }
+    }
     render() {
-
         return (
             <div className={classNameObj.UsersContainer}>
+                <div>
+                    <p>Выводить пользователей на страницу</p>
+                    <div className={classNameObj.usersAmountDisplayedSwitcherContainer}>
+                        <div onClick={this.userAmountSwitcherCC(5)}>
+                            5
+                        </div>
+                        <div onClick={this.userAmountSwitcherCC(10)}>
+                            10
+                        </div>
+                        <div onClick={this.userAmountSwitcherCC(20)}>
+                            20
+                        </div>
+                        <div onClick={this.userAmountSwitcherCC(100)}>
+                            100
+                        </div>
+                    </div>
+                </div>
                 <div className={classNameObj.pageSwitchersContainer}>
                     {this.createPagesArr()}
+                    <div>
+                        <p>
+                            Всего страниц {this.props.pagesRequiredToDisplay}
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            Пользователей в сети {this.props.totalUsersCount}
+                        </p>
+                    </div>
                 </div>
                 <h3>Пользователь</h3>
                 <div></div>
@@ -79,7 +118,6 @@ class Users extends React.Component {
             </div>
         );
     }
-
     componentDidMount() {
         this.getUsers();
     }

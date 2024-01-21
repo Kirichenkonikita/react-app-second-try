@@ -37,10 +37,11 @@ export function setUsersAmountDisplayedAC(usersAmountDisplayed) {
 }
 export function setCurrentActivePageAC(currentActivePage) {
     return {
-        action: SET_CURRENT_ACTIVE_PAGE,
+        type: SET_CURRENT_ACTIVE_PAGE,
         currentActivePage,
     }
 }
+
 
 
 const initialState = {
@@ -58,47 +59,20 @@ const initialState = {
         },
     ],
 
-    _totalUsersCount: 0,
-    _usersAmountDisplayed: 10,
+    totalUsersCount: 0,
+    usersAmountDisplayed: 3,
     pagesRequiredToDisplay: 1,
-    currentActivePage: 1,
+    currentActivePage: 5,
     pagesToDisplay: 3,
-
-    set totalUsersCount(totalUsersCount) {
-        this._totalUsersCount = totalUsersCount;
-        this.pagesRequiredToDisplay = Math.ceil(
-            this._totalUsersCount / this._usersDisplayedOnPage
-        );
-        this.pagesRequiredToDisplay > 10 ?
-            this.pagesToDisplay = 10 :
-            this.pagesToDisplay = this.pagesRequiredToDisplay;
-    },
-    get totalUsersCount() {
-        return this._totalUsersCount;
-    },
-
-    set usersAmountDisplayed(usersAmountDisplayed) {
-        this.usersAmountDisplayed = usersAmountDisplayed;
-        this._totalUsersCount = Math.ceil(
-            this._totalUsersCount / this.usersAmountDisplayed
-        )
-        this.pagesRequiredToDisplay > 10 ?
-            this.pagesToDisplay = 10 :
-            this.pagesToDisplay = this.pagesRequiredToDisplay;
-    },
-    get usersAmountDisplayed() {
-        return this._usersAmountDisplayed;
-    }
-
 };
 
 export default function UsersReducer(state = initialState, action) {
     switch (action.type) {
         case SET_USERS:
-            {
+            {   
                 return {
                     ...state,
-                    usersArr: action.usersArr,
+                    usersArr: [...action.usersArr],
                 }
             }
         case FOLLOW:
@@ -141,15 +115,43 @@ export default function UsersReducer(state = initialState, action) {
             }
         case SET_TOTAL_USERS_COUNT:
             {
-                const newState = { ...state };
-                newState.totalUsersCount = action.totalUsersCount;
-                return newState;
+                let newTotalUsersCount = action.totalUsersCount;
+                let newPagesToDisplay = 0;
+                let newPagesRequiredToDisplay = Math.ceil(
+                    newTotalUsersCount / state.usersAmountDisplayed
+                );
+
+                newPagesRequiredToDisplay > 10 ?
+                    newPagesToDisplay = 10 :
+                    newPagesToDisplay = newPagesRequiredToDisplay;
+
+
+                return {
+                    ...state,
+                    totalUsersCount: newTotalUsersCount,
+                    pagesRequiredToDisplay: newPagesRequiredToDisplay,
+                    pagesToDisplay: newPagesToDisplay,
+                }
             }
         case SET_USERS_AMOUNT_DISPLAYED:
             {
-                const newState = { ...state };
-                newState.usersAmountDisplayed = action.usersAmountDisplayed;
-                return newState;
+                let newPagesToDisplay = 0;
+                let newUsersAmountDisplayed = action.usersAmountDisplayed;
+                let newPagesRequiredToDisplay = Math.ceil(
+                    state.totalUsersCount / newUsersAmountDisplayed
+                )
+                if (newPagesRequiredToDisplay === state.pagesRequiredToDisplay) {
+                    return state
+                } else if (newPagesRequiredToDisplay > 10) {
+                    newPagesToDisplay = 10;
+                }
+
+                return {
+                    ...state,
+                    pagesRequiredToDisplay: newPagesRequiredToDisplay,
+                    pagesToDisplay: newPagesToDisplay,
+                    usersAmountDisplayed: newUsersAmountDisplayed,
+                }
             }
         case SET_CURRENT_ACTIVE_PAGE:
             {
