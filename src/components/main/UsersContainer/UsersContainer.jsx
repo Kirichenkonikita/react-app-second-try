@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
-import Users from "./Users";
-import { followAC, setCurrentActivePageAC, setTotalUsersAmountAC, setUsersAC, setUsersAmountDisplayedAC, unFollowAC } from "../../../redux/reducers/Users/UsersReducer";
+import Users from "./Users/Users";
+import { follow, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow } from "../../../redux/reducers/Users/UsersReducer";
 
 function mapStateToProps(state) {
     const UsersState = state.Users;
@@ -12,10 +12,11 @@ function mapStateToProps(state) {
         pagesRequiredToDisplay: UsersState.pagesRequiredToDisplay,
         pagesToDisplay: UsersState.pagesToDisplay,
         currentActivePage: UsersState.currentActivePage,
+        isLoading: UsersState.isLoading,
     };
 }
 
-function mapDispatchToProps(dispatch) {
+/* function mapDispatchToProps(dispatch) {
     return {
         follow: (id) => dispatch(followAC(id)),
 
@@ -31,8 +32,24 @@ function mapDispatchToProps(dispatch) {
 
         setCurrentActivePage: (currentActivePage) => dispatch(
             setCurrentActivePageAC(currentActivePage)),
+
+        setIsLoading: (boolean) => dispatch(
+            setIsLoadingAC(boolean)),
     };
+}
+ */
+
+const mapDispatchToProps = {
+    follow,
+    unFollow,
+    setUsers,
+    setTotalUsersAmount,
+    setUsersAmountDisplayed,
+    setCurrentActivePage,
+    setIsLoading,
 }
 
 const UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users)
 export default UsersContainer;
+
+

@@ -5,7 +5,7 @@ import NavBar from './components/NavBar/NavBar';
 import Profile from './components/main/Profile/Profile';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import UsersContainer from './components/main/Users/UsersContainer';
+import UsersContainer from './components/main/UsersContainer/UsersContainer';
 
 function App() {
   return (

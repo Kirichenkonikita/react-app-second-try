@@ -4,44 +4,50 @@ const UNFOLLOW = "UNFOLLOW";
 const SET_TOTAL_USERS_COUNT = "SET_TOTAL_USERS_COUNT";
 const SET_USERS_AMOUNT_DISPLAYED = "SET_USERS_AMOUNT_DISPLAYED";
 const SET_CURRENT_ACTIVE_PAGE = "SET_CURRENT_ACTIVE_PAGE";
+const SET_IS_LOADING = "SET_IS_LOADING";
 
-export function setUsersAC(usersArr) {
+export function setUsers (usersArr) {
     return {
         type: SET_USERS,
         usersArr,
     }
 }
-export function followAC(id) {
+export function follow (id) {
     return {
         type: FOLLOW,
         id,
     }
 }
-export function unFollowAC(id) {
+export function unFollow (id) {
     return {
         type: UNFOLLOW,
         id,
     }
 }
-export function setTotalUsersAmountAC(totalUsersCount) {
+export function setTotalUsersAmount (totalUsersCount) {
     return {
         type: SET_TOTAL_USERS_COUNT,
         totalUsersCount,
     }
 }
-export function setUsersAmountDisplayedAC(usersAmountDisplayed) {
+export function setUsersAmountDisplayed (usersAmountDisplayed) {
     return {
         type: SET_USERS_AMOUNT_DISPLAYED,
         usersAmountDisplayed,
     }
 }
-export function setCurrentActivePageAC(currentActivePage) {
+export function setCurrentActivePage (currentActivePage) {
     return {
         type: SET_CURRENT_ACTIVE_PAGE,
         currentActivePage,
     }
 }
-
+export function setIsLoading (boolean) {
+    return {
+        type: SET_IS_LOADING,
+        isLoading: boolean,
+    }
+}
 
 
 const initialState = {
@@ -64,6 +70,7 @@ const initialState = {
     pagesRequiredToDisplay: 1,
     currentActivePage: 5,
     pagesToDisplay: 3,
+    isLoading: false,
 };
 
 export default function UsersReducer(state = initialState, action) {
@@ -158,6 +165,13 @@ export default function UsersReducer(state = initialState, action) {
                 return {
                     ...state,
                     currentActivePage: action.currentActivePage,
+                }
+            }
+        case SET_IS_LOADING:
+            {
+                return {
+                    ...state,
+                    isLoading: action.isLoading,
                 }
             }
         default:

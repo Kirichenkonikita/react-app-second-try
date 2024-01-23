@@ -1,6 +1,7 @@
 import React from "react";
-import userImage from "./230263-200.png";
+import userImage from "./../../../../assets/230263-200.png";
 import classNameObj from "./User.module.css";
+import { NavLink } from "react-router-dom";
 
 class User extends React.Component {
     onClick = (event) => {
@@ -11,14 +12,17 @@ class User extends React.Component {
     render() {
         return (
             <div className={classNameObj.UserContainer}>
+
                 <div className={classNameObj.UserLeftContainer}>
-                    <img src={
-                        this.props.photos.small ?
-                            this.props.photos.small :
-                            userImage
-                    }
-                        alt="Аватарка пользователя"
-                    />
+                    <NavLink to={"/profile/" + this.props.id}>
+                        <img src={
+                            this.props.photos.small ?
+                                this.props.photos.small :
+                                userImage
+                        }
+                            alt="Аватарка пользователя"
+                        />
+                    </NavLink>
                     <button onClick={this.onClick}>
                         {this.props.followed ? "Отписаться" : "Подписаться"}
                     </button>

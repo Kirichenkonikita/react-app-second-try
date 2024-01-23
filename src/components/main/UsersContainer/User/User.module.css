@@ -8,6 +8,10 @@
     border: 1px solid black;
 }
 
+.UserContainer a {
+    text-decoration: none;
+}
+
 .UserContainer img {
     height: 100px;
     width: 100px;

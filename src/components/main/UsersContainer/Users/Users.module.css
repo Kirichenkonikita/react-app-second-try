@@ -33,9 +33,11 @@
 }
 
 
-.activePage {
+.activePage, .activeAmountSwitcherButton {
     font-weight: bolder;
+    background-color: brown;
 }
-.unActivePage {
+.unActivePage, .unActiveAmountSwitcherButton{
     font-weight: lighter;
 }
+
