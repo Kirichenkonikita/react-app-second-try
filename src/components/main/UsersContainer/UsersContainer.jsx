@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Users from "./Users/Users";
 import { follow, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow } from "../../../redux/reducers/Users/UsersReducer";
+import { setUsersPage } from "../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 
 function mapStateToProps(state) {
     const UsersState = state.Users;
@@ -16,29 +17,6 @@ function mapStateToProps(state) {
     };
 }
 
-/* function mapDispatchToProps(dispatch) {
-    return {
-        follow: (id) => dispatch(followAC(id)),
-
-        unFollow: (id) => dispatch(unFollowAC(id)),
-
-        setUsers: (usersArr) => dispatch(setUsersAC(usersArr)),
-
-        setTotalUsersAmount: (totalUsersCount) => dispatch(
-            (setTotalUsersAmountAC(totalUsersCount))),
-
-        setUsersAmountDisplayed: (usersAmountDisplayed) => dispatch(
-            setUsersAmountDisplayedAC(usersAmountDisplayed)),
-
-        setCurrentActivePage: (currentActivePage) => dispatch(
-            setCurrentActivePageAC(currentActivePage)),
-
-        setIsLoading: (boolean) => dispatch(
-            setIsLoadingAC(boolean)),
-    };
-}
- */
-
 const mapDispatchToProps = {
     follow,
     unFollow,
@@ -47,6 +25,7 @@ const mapDispatchToProps = {
     setUsersAmountDisplayed,
     setCurrentActivePage,
     setIsLoading,
+    setUsersPage,
 }
 
 const UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users)

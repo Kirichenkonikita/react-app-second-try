@@ -37,15 +37,17 @@ class Users extends React.Component {
 
         const UsersArr = usersArr.map(userObj => {
             return <
-                User name={userObj.name}
+                User
+                name={userObj.name}
                 id={userObj.id}
                 uniqueUrlName={userObj.uniqueUrlName}
                 photos={userObj.photos}
                 status={userObj.status}
                 followed={userObj.followed}
-                key={userObj.id}
+                key={"usersArrKey" + userObj.id}
                 follow={this.props.follow}
                 unFollow={this.props.unFollow}
+                setUsersPage={this.props.setUsersPage}
             />
         })
 
@@ -60,15 +62,15 @@ class Users extends React.Component {
 
             return (
                 <div onClick={this.userAmountSwitcherCC(props.usersAmountDisplayed)}
-                className={className}>
+                    className={className}>
                     {props.usersAmountDisplayed}
                 </div>
             )
         }
-        
+
         return arr.map(usersAmountDisplayed => {
-            return <UsersAmountSwitcherButton usersAmountDisplayed={usersAmountDisplayed}/>
-        }) 
+            return <UsersAmountSwitcherButton usersAmountDisplayed={usersAmountDisplayed} />
+        })
     }
     getUsers() {
         this.props.setIsLoading(true);
@@ -79,7 +81,14 @@ class Users extends React.Component {
         if (this.term) {
             url = url + "&term=" + this.term;
         }
-        axios.get(url)
+
+        const optionsObj = {
+            withCredentials: true,
+            headers: {
+                "API-KEY": "dc906419-adef-444f-90e0-c043119c8e82",
+            }
+        }
+        axios.get(url, optionsObj)
             .then(response => {
                 this.props.setTotalUsersAmount(response.data.totalCount);
                 this.props.setUsers(response.data.items)
@@ -105,15 +114,18 @@ class Users extends React.Component {
     render() {
         return (
             <div className={classNameObj.UsersContainer}>
-            {this.props.isLoading ? 
-            <Preloader /> :
-            false}
+
+                {this.props.isLoading
+                    ? <Preloader />
+                    : false}
+
                 <div>
                     <p>Выводить пользователей на страницу</p>
                     <div className={classNameObj.usersAmountDisplayedSwitcherContainer}>
-                       {this.createUsersAmountSwitchersArr([5, 10, 20, 100])}
+                        {this.createUsersAmountSwitchersArr([5, 10, 20, 100])}
                     </div>
                 </div>
+
                 <div className={classNameObj.pageSwitchersContainer}>
                     {this.createPagesArr()}
                     <div>
@@ -127,10 +139,9 @@ class Users extends React.Component {
                         </p>
                     </div>
                 </div>
-                <h3>Пользователь</h3>
-                <div></div>
+
                 {this.createUsersArr()}
-                <button>Добавить ищщо ползьзователей</button>
+
             </div>
         );
     }

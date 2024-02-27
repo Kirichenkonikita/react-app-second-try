@@ -1,6 +1,6 @@
 .headerContainer {
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 1fr 4fr 1fr;
     align-items: center;
 
     height: 250px;

@@ -35,7 +35,6 @@ export default function SocialNetworkIcon(props) {
             break;
     }
     
-    debugger;
 
     return (
         <div className={classNameObj.SocialMediaIconContainer}>

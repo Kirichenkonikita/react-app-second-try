@@ -1,18 +1,20 @@
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
 import classNameObj from "./Profile.module.css";
-import UserInfo from "./UserInfo/UserInfo";
-import SocialMediaIcon from "./../../otherComponents/SocialMediaIcon/SocialMediaIcon";
+import UsersProfilePage from "../UsersProfilePage/UsersProfilePage";
+import React from "react";
+import IsNotAuthorised from "../../otherComponents/Auth/IsNotAuthorised/IsNotAuthorised";
 
-function Profile(props) {
-    return(
+export default function Profile(props) {
+    return (
         <div className={classNameObj.profileContainer}>
             <div className={classNameObj.backgroundContainer}></div>
-            <UserInfo />
+            {
+                props.isAuthorised
+                ? <UsersProfilePage {...props} />
+                : <IsNotAuthorised />
+            }          
             <MyPostsContainer />
-            <SocialMediaIcon userSocialMediaURL="https://vk.com/dikomatnaya" 
-            socialMediaType="vk"/>
         </div>
     )
 }
 
-export default Profile;
