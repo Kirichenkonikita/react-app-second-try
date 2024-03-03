@@ -34,20 +34,17 @@ class Users extends React.Component {
     createUsersArr() {
         const usersArr = this.props.usersArr;
 
-
         const UsersArr = usersArr.map(userObj => {
-            return <
-                User
-                name={userObj.name}
-                id={userObj.id}
-                uniqueUrlName={userObj.uniqueUrlName}
-                photos={userObj.photos}
-                status={userObj.status}
-                followed={userObj.followed}
+            return <User
+                {...userObj}
                 key={"usersArrKey" + userObj.id}
                 follow={this.props.follow}
                 unFollow={this.props.unFollow}
                 setUsersPage={this.props.setUsersPage}
+                toggleFollowingInProcess={this.props.toggleFollowingInProcess}
+                usersIdsFollowingInProcessArr={this.props.usersIdsFollowingInProcessArr}
+                followUserById={this.props.followUserById}
+                unFollowUserById={this.props.unFollowUserById}
             />
         })
 

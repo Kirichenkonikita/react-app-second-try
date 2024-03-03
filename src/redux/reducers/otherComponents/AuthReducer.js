@@ -1,22 +1,22 @@
+import { axiosRequestsObj } from "../../../api/axiosRequests";
+
 const SET_CURRENT_AUTHORISED_USER_OBJ = `SET_CURRENT_AUTHORISED_USER_OBJ`;
 const SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ = `SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ`;
 const LOGOUT_CURRENT_AUTHORISED_USER = `LOGOUT_CURRENT_AUTHORISED_USER`;
 
 
-export function setCurrentAuthorisedUserObj(newCurrentAuthorisedUserObj) {
+export function createActionSetCurrentAuthorisedUserObj(newCurrentAuthorisedUserObj) {
     return {
         type: SET_CURRENT_AUTHORISED_USER_OBJ,
         newCurrentAuthorisedUserObj,
     }
 }
-
-export function setCurrentAuthorisedUserProfileObj(newCurrentAuthorisedUserProfileObj) {
+export function createActionSetCurrentAuthorisedUserProfileObj(newCurrentAuthorisedUserProfileObj) {
     return {
         type: SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ,
         newCurrentAuthorisedUserProfileObj,
     }
 }
-
 export function logoutCurrentAuthorisedUser() {
     return {
         type: LOGOUT_CURRENT_AUTHORISED_USER,
@@ -67,4 +67,13 @@ export default function AuthReducer(state = initialState, action) {
     }
 }
 
-/* Сразу при установке  */
+export function setInStoreAuthorisedUserObjs() {
+    return dispatch => {
+        axiosRequestsObj.getCurrentAuthorisedUserDataObj()
+            .then(authorisedUserDataObj => {
+                dispatch(createActionSetCurrentAuthorisedUserObj(authorisedUserDataObj));
+                axiosRequestsObj.getUserProfileDataObjById(authorisedUserDataObj.id)
+                .then(userProfileDataObj => dispatch(createActionSetCurrentAuthorisedUserProfileObj(userProfileDataObj)));
+            })
+    }
+}

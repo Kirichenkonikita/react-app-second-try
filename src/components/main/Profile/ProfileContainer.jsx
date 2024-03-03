@@ -7,7 +7,7 @@ function mapStateToProps(state) {
 
     return {
        ...UsersProfilePage,
-       userObjIsLoaded: state.Auth.profileIsLoaded,
+       userProfileIsLoaded: state.Auth.profileIsLoaded,
        isAuthorised: state.Auth.isAuthorised,
     }
 }

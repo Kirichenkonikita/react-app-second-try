@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import Users from "./Users/Users";
-import { follow, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow } from "../../../redux/reducers/Users/UsersReducer";
+import { follow, followUserById, unFollowUserById, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow, toggleFollowingInProcess } from "../../../redux/reducers/Users/UsersReducer";
 import { setUsersPage } from "../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 
 function mapStateToProps(state) {
@@ -14,6 +14,7 @@ function mapStateToProps(state) {
         pagesToDisplay: UsersState.pagesToDisplay,
         currentActivePage: UsersState.currentActivePage,
         isLoading: UsersState.isLoading,
+        usersIdsFollowingInProcessArr: UsersState.usersIdsFollowingInProcessArr,
     };
 }
 
@@ -26,6 +27,9 @@ const mapDispatchToProps = {
     setCurrentActivePage,
     setIsLoading,
     setUsersPage,
+    toggleFollowingInProcess,
+    followUserById,
+    unFollowUserById,    
 }
 
 const UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users)

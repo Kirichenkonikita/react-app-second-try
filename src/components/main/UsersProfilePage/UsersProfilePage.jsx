@@ -4,7 +4,7 @@ import SocialMediaIcon from "./../../otherComponents/SocialMediaIcon/SocialMedia
 import Preloader from "../../otherComponents/Preloader/Preloader";
 
 export default function UsersProfilePage(props) {
-    if (!props.userObjIsLoaded) {
+    if (!props.userProfileIsLoaded) {
         return <Preloader />;
     }
 

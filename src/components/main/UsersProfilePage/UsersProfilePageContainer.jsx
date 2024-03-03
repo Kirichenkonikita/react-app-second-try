@@ -1,30 +1,34 @@
 import { connect } from "react-redux";
-import { setUsersPage } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
+import { setUsersPage, toggleUserProfileIsLoaded } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 import UsersProfilePage from "./UsersProfilePage";
 import { withRouter } from "../../..";
 import React from "react";
 import Preloader from "../../otherComponents/Preloader/Preloader";
+import { ProfileAxiosRequestObj } from "../../../api/axiosRequests";
 import axios from "axios";
 
 class UsersProfilePageContainer extends React.Component {
-    getUser(userId) {
-        if (this.props.userObjIsLoaded && this.props.userId == userId) {
-            return
-        }
-
-        let url = `https://social-network.samuraijs.com/api/1.0/profile/${userId}`
-        axios.get(url).then((result) => this.props.setUsersPage(result.data))
-    }
     componentDidMount() {
         const currentUserId = this.props.router.params.userId;
         if (!currentUserId) {
             return
         }
-        this.getUser(currentUserId)
+        this.props.toggleUserProfileIsLoaded(false);
+
+        axios.get(`https://social-network.samuraijs.com/api/1.0/profile/${currentUserId}`)
+        .then(response => {
+            this.props.setUsersPage(response.data);
+            console.log(response)
+            return response.data;
+        })
+        .then((response) => {
+            if (!response) return
+            this.props.toggleUserProfileIsLoaded(true)
+        })
     }
 
     render() {
-        if (!this.props.userObjIsLoaded) {
+        if (!this.props.userProfileIsLoaded) {
             return <Preloader />;
         }
 
@@ -34,21 +38,16 @@ class UsersProfilePageContainer extends React.Component {
 
 
 function mapStateToProps(state) {
-    let UsersProfilePage = state.UsersProfilePage;
-    let userObjIsLoaded = false;
-    
-    if (UsersProfilePage.userObj) {
-        userObjIsLoaded = true;
-    }
-
+    let UsersProfilePageState = state.UsersProfilePage;
     return {
-       ...UsersProfilePage.userObj,
-       userObjIsLoaded,
+       ...UsersProfilePageState.userObj,
+       userProfileIsLoaded: UsersProfilePageState.userProfileIsLoaded,
     }
 }
 
 const dispatchToPropsObj = {
     setUsersPage,
+    toggleUserProfileIsLoaded
 }
 
 const UsersProfilePageWithRouter = withRouter(UsersProfilePageContainer);
