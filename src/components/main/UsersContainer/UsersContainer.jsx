@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import Users from "./Users/Users";
-import { follow, followUserById, unFollowUserById, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow, toggleFollowingInProcess } from "../../../redux/reducers/Users/UsersReducer";
+import { follow, UsersThunks, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow, toggleFollowingInProcess } from "../../../redux/reducers/Users/UsersReducer";
 import { setUsersPage } from "../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 
 function mapStateToProps(state) {
@@ -15,6 +15,8 @@ function mapStateToProps(state) {
         currentActivePage: UsersState.currentActivePage,
         isLoading: UsersState.isLoading,
         usersIdsFollowingInProcessArr: UsersState.usersIdsFollowingInProcessArr,
+        possibleAmountUsersDisplayedArr: UsersState.possibleAmountUsersDisplayedArr,
+        initialisationFinished: UsersState.initialisationFinished,
     };
 }
 
@@ -28,8 +30,7 @@ const mapDispatchToProps = {
     setIsLoading,
     setUsersPage,
     toggleFollowingInProcess,
-    followUserById,
-    unFollowUserById,    
+    ...UsersThunks,
 }
 
 const UsersContainer = connect(mapStateToProps, mapDispatchToProps)(Users)

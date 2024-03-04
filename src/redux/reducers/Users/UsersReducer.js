@@ -52,7 +52,7 @@ export function setIsLoading(boolean) {
     }
 }
 
-export function toggleFollowingInProcess(fetchingIsStarted, userIdFollowingProcessed ) {
+export function toggleFollowingInProcess(fetchingIsStarted, userIdFollowingProcessed) {
     return {
         type: TOGGLE_FOLLOWING_IN_PROCESS,
         fetchingIsStarted,
@@ -74,7 +74,7 @@ const initialState = {
             "followed": false
         },
     ],
-
+    initialisationFinished: false,
     totalUsersCount: 0,
     usersAmountDisplayed: 20,
     pagesRequiredToDisplay: 1,
@@ -82,6 +82,7 @@ const initialState = {
     pagesToDisplay: 20,
     isLoading: false,
     usersIdsFollowingInProcessArr: [],
+    possibleAmountUsersDisplayedArr: [5, 10, 20, 100],
 };
 
 export default function UsersReducer(state = initialState, action) {
@@ -189,38 +190,167 @@ export default function UsersReducer(state = initialState, action) {
             {
                 return {
                     ...state,
-                    usersIdsFollowingInProcessArr: action.fetchingIsStarted 
-                    ? [...state.usersIdsFollowingInProcessArr, action.userIdFollowingProcessed]
-                    : state.usersIdsFollowingInProcessArr.filter(userId => userId !== action.userIdFollowingProcessed)
+                    usersIdsFollowingInProcessArr: action.fetchingIsStarted
+                        ? [...state.usersIdsFollowingInProcessArr, action.userIdFollowingProcessed]
+                        : state.usersIdsFollowingInProcessArr.filter(userId => userId !== action.userIdFollowingProcessed)
                 }
             }
+
         default:
             return state;
     }
 }
+// Санки
+export const UsersThunks = {
+    followUserById(userId) {
+        return dispatch => {
+            dispatch(toggleFollowingInProcess(true, userId))
+            axiosRequestsObj.followUserById(userId)
+                .then(isSuccessful => {
+                    if (isSuccessful) {
+                        dispatch(follow(userId))
+                        dispatch(toggleFollowingInProcess(false, userId))
+                    }
+                })
+        }
+    },
 
-export function followUserById(userId) {
-    return dispatch => {
-        dispatch(toggleFollowingInProcess(true, userId))
-        axiosRequestsObj.followUserById(userId)
-        .then(isSuccessful => {
-            if(isSuccessful) {
-                dispatch(follow(userId))
-                dispatch(toggleFollowingInProcess(false, userId))
+    unFollowUserById(userId) {
+        return dispatch => {
+            dispatch(toggleFollowingInProcess(true, userId))
+            axiosRequestsObj.unFollowUserById(userId)
+                .then(isSuccessful => {
+                    if (isSuccessful) {
+                        dispatch(unFollow(userId))
+                        dispatch(toggleFollowingInProcess(false, userId))
+                    }
+                })
+        }
+    },
+
+    reloadUsersArrayByCountPageTerm(
+        usersAmountDisplayed,
+        currentActivePage,
+        term
+    ) {
+        return dispatch => {
+            console.log(`из reloadUsersArrayByCountPageTerm`, usersAmountDisplayed, currentActivePage, term)
+            dispatch(setIsLoading(true))
+            axiosRequestsObj.getUsersObjByCountPageTerm(usersAmountDisplayed, currentActivePage, term)
+                .then(usersObj => {
+                    if (usersObj.error) alert(usersObj.error)
+                    dispatch(setTotalUsersAmount(usersObj.totalCount))
+                    dispatch(setUsers(usersObj.items))
+                    dispatch(setIsLoading(false))
+                })
+        }
+    },
+
+    changeActivePageByInt(
+        newActivePage,
+        usersStateAmountDisplayed,
+    ) {
+        return dispatch => {
+            dispatch(setCurrentActivePage(newActivePage));
+
+            dispatch(UsersThunks.reloadUsersArrayByCountPageTerm(
+                usersStateAmountDisplayed,
+                newActivePage
+            ))
+        }
+    },
+
+    сhangeAmountDisplayedByInt(
+        usersNewAmountDisplayed,
+        currentStateActivePage
+    ) {
+        return dispatch => {
+            console.log(`из сhangeAmountDisplayedByInt`, usersNewAmountDisplayed,
+                currentStateActivePage)
+            dispatch(setUsersAmountDisplayed(usersNewAmountDisplayed))
+            dispatch(UsersThunks.reloadUsersArrayByCountPageTerm(
+                usersNewAmountDisplayed,
+                currentStateActivePage
+            ))
+        }
+    },
+
+    mapArrToUsersPerPageButtonsArr(
+        arr,
+        classNameObj,
+        stateUsersAmountDisplayed,
+        stateCurrentActivePage
+    ) {
+        return dispatch => {
+            return arr.map(usersAmountDisplayed => {
+                let className;
+
+                stateUsersAmountDisplayed === usersAmountDisplayed
+                    ? className = classNameObj.activeAmountSwitcherButton
+                    : className = classNameObj.unActiveAmountSwitcherButton
+
+                return (
+                    <div onClick={() => {
+                        console.log(
+                            `из mapArrToUsersPerPageButtonsArr`,
+                            usersAmountDisplayed,
+                            stateCurrentActivePage,
+                        )
+
+                        dispatch(UsersThunks.сhangeAmountDisplayedByInt(
+                            usersAmountDisplayed,
+                            stateCurrentActivePage
+                        )
+                        )
+                    }
+                    }
+                        className={className}
+                        key={"usersSwitcher" + usersAmountDisplayed}>
+                        {usersAmountDisplayed}
+                    </div>
+                )
+            })
+        }
+    },
+
+    createPageButtonsArrByPagesToDisplay(
+        pagesToDisplay,
+        currentActivePage,
+        classNameObj,
+        stateUsersAmountDisplayed
+    ) {
+        return dispatch => {
+            let pagesArr = [];
+
+            for (let i = 1; i <= pagesToDisplay; i++) {
+                pagesArr.push(i);
             }
-        } )
+
+            return pagesArr.map(item => {
+                return (
+                    <div
+                        className={classNameObj.pageSwitcher}
+                        key={"pagesSwitcher" + item}
+                    >
+                        <p className={
+                            item === currentActivePage
+                                ? classNameObj.activePage
+                                : classNameObj.unActivePage
+                        }
+                            onClick={
+                                () => {
+                                    dispatch(UsersThunks.changeActivePageByInt(
+                                        item,
+                                        stateUsersAmountDisplayed
+                                    ))
+                                }
+                            }
+                        >
+                            {item}
+                        </p>
+                    </div>
+                )
+            })
+        }
     }
 }
-export function unFollowUserById(userId) {
-    return dispatch => {
-        dispatch(toggleFollowingInProcess(true, userId))
-        axiosRequestsObj.unFollowUserById(userId)
-        .then(isSuccessful => {
-            if(isSuccessful) {
-                dispatch(unFollow(userId))
-                dispatch(toggleFollowingInProcess(false, userId))
-            }
-        } )
-    }
-}
-
