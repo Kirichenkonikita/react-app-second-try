@@ -12,38 +12,6 @@ class Users extends React.Component {
             this.props.currentActivePage
         );
     }
-    createPagesArr() {
-        let pagesArr = [];
-
-        for (let i = 1; i <= this.props.pagesToDisplay; i++) {
-            pagesArr.push(i);
-        }
-
-        pagesArr = pagesArr.map(item => {
-            return (
-                <div
-                    className={classNameObj.pageSwitcher}
-                    key={"pagesSwitcher" + item}>
-                    <p className={
-                        item === this.props.currentActivePage ?
-                            classNameObj.activePage :
-                            classNameObj.unActivePage}
-                        onClick={
-                            () => {
-                                this.props.changeActivePageByInt(
-                                    item,
-                                    this.props.usersAmountDisplayed
-                                )
-                            }
-                        }>
-                        {item}
-                    </p>
-                </div>
-            )
-        })
-
-        return pagesArr;
-    }
     render() {
         return (
             <div className={classNameObj.UsersContainer}>

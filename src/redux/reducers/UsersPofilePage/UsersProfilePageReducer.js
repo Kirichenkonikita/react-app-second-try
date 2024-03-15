@@ -1,3 +1,6 @@
+import { axiosRequestsObj } from "../../../api/axiosRequests";
+import { togglePreloader } from "../otherComponents/PreloaderReducer";
+
 const SET_USER_PAGE = "SET_USER_PAGE";
 const TOGGLE_USER_PROFILE_IS_LOADED = "TOGGLE_USER_PROFILE_IS_LOADED";
 
@@ -39,5 +42,18 @@ export default function UsersProfilePageReducer(state = initialState, action) {
             }
         default:
             return state;
+    }
+}
+
+export const UserProfilePageThunks = {
+    setUserProfileObjInState(userId) {
+        return dispatch => {
+            dispatch(toggleUserProfileIsLoaded(false))
+            axiosRequestsObj.getUserProfileDataObjById(userId)
+                .then(userObj => {
+                    dispatch(setUsersPage(userObj))
+                    dispatch(toggleUserProfileIsLoaded(true))
+                })
+        }
     }
 }

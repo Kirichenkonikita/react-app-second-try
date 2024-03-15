@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "./Header";
-import axios from "axios";
 import { connect } from "react-redux";
 import {
     logoutCurrentAuthorisedUser,
@@ -9,7 +8,7 @@ import {
 
 class HeaderContainer extends React.Component {
     componentDidMount() {
-        this.props.setInStoreAuthorisedUserObjs();
+        this.props.isAuthorised || this.props.setInStoreAuthorisedUserObjs()
     }
     render() {
         return <Header {...this.props} />
@@ -17,9 +16,8 @@ class HeaderContainer extends React.Component {
 }
 
 function mapDispatchToProps(state) {
-    const authState = state.Auth;
     return {
-        ...authState,
+        ...state.Auth,
     }
 }
 

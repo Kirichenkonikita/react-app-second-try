@@ -3,6 +3,7 @@ import classNameObj from "./Profile.module.css";
 import UsersProfilePage from "../UsersProfilePage/UsersProfilePage";
 import React from "react";
 import IsNotAuthorised from "../../otherComponents/Auth/IsNotAuthorised/IsNotAuthorised";
+import MyStatus from "./MyStatus/MyStatus";
 
 export default function Profile(props) {
     return (
@@ -10,9 +11,13 @@ export default function Profile(props) {
             <div className={classNameObj.backgroundContainer}></div>
             {
                 props.isAuthorised
-                ? <UsersProfilePage {...props} />
-                : <IsNotAuthorised />
-            }          
+                    ? <UsersProfilePage {...props} />
+                    : <IsNotAuthorised />
+            }
+            <MyStatus
+                currentAuthorisedUserStatus={props.currentAuthorisedUserStatus}
+                setAuthorisedUserStatusByStr={props.setAuthorisedUserStatusByStr}
+            />
             <MyPostsContainer />
         </div>
     )

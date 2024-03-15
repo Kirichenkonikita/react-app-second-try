@@ -7,6 +7,7 @@ import UsersContainer from './components/main/UsersContainer/UsersContainer';
 import UsersProfilePageContainer from './components/main/UsersProfilePage/UsersProfilePageContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
 import ProfileContainer from './components/main/Profile/ProfileContainer';
+import Login from './components/otherComponents/Login/Login';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path='/profile' element={<ProfileContainer />} />
               <Route path='/profile/:userId' element={<UsersProfilePageContainer />} />
               <Route path='/users' element={<UsersContainer />} />
+              <Route path='/login' element={<Login />} />
             </Routes>
           </main>
         </div>

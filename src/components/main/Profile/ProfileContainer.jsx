@@ -1,15 +1,20 @@
 import { connect } from "react-redux";
 import Profile from "./Profile";
+import React from "react";
+import { setAuthorisedUserStatusByStr } from "../../../redux/reducers/otherComponents/AuthReducer";
 
-function mapStateToProps(state) {
-    let UsersProfilePage = state.Auth.currentAuthorisedUserProfileObj;
-
-
-    return {
-       ...UsersProfilePage,
-       userProfileIsLoaded: state.Auth.profileIsLoaded,
-       isAuthorised: state.Auth.isAuthorised,
+class ProfileContainer extends React.Component {
+    render() { 
+        return <Profile {...this.props}/>
     }
 }
 
-export default connect(mapStateToProps)(Profile);
+function mapStateToProps(state) {
+    return {
+        ...state.Auth,
+        userProfileIsLoaded: state.Auth.profileIsLoaded,
+        ...state.Auth.currentAuthorisedUserProfileObj,
+    }
+}
+
+export default connect(mapStateToProps, { setAuthorisedUserStatusByStr })(ProfileContainer);

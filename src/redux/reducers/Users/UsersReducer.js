@@ -234,7 +234,6 @@ export const UsersThunks = {
         term
     ) {
         return dispatch => {
-            console.log(`из reloadUsersArrayByCountPageTerm`, usersAmountDisplayed, currentActivePage, term)
             dispatch(setIsLoading(true))
             axiosRequestsObj.getUsersObjByCountPageTerm(usersAmountDisplayed, currentActivePage, term)
                 .then(usersObj => {
@@ -265,8 +264,6 @@ export const UsersThunks = {
         currentStateActivePage
     ) {
         return dispatch => {
-            console.log(`из сhangeAmountDisplayedByInt`, usersNewAmountDisplayed,
-                currentStateActivePage)
             dispatch(setUsersAmountDisplayed(usersNewAmountDisplayed))
             dispatch(UsersThunks.reloadUsersArrayByCountPageTerm(
                 usersNewAmountDisplayed,
@@ -291,12 +288,6 @@ export const UsersThunks = {
 
                 return (
                     <div onClick={() => {
-                        console.log(
-                            `из mapArrToUsersPerPageButtonsArr`,
-                            usersAmountDisplayed,
-                            stateCurrentActivePage,
-                        )
-
                         dispatch(UsersThunks.сhangeAmountDisplayedByInt(
                             usersAmountDisplayed,
                             stateCurrentActivePage

@@ -1,55 +1,42 @@
 import { connect } from "react-redux";
-import { setUsersPage, toggleUserProfileIsLoaded } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
-import UsersProfilePage from "./UsersProfilePage";
+import { setUsersPage, toggleUserProfileIsLoaded, UserProfilePageThunks } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 import { withRouter } from "../../..";
 import React from "react";
+import { togglePreloader } from "../../../redux/reducers/otherComponents/PreloaderReducer";
+import withAuthRedirect from "../../../hoc/withAuthRedirect"
+import { compose } from "redux";
+import UsersProfilePage from "./UsersProfilePage";
 import Preloader from "../../otherComponents/Preloader/Preloader";
-import { ProfileAxiosRequestObj } from "../../../api/axiosRequests";
-import axios from "axios";
 
 class UsersProfilePageContainer extends React.Component {
     componentDidMount() {
-        const currentUserId = this.props.router.params.userId;
-        if (!currentUserId) {
-            return
-        }
-        this.props.toggleUserProfileIsLoaded(false);
-
-        axios.get(`https://social-network.samuraijs.com/api/1.0/profile/${currentUserId}`)
-        .then(response => {
-            this.props.setUsersPage(response.data);
-            console.log(response)
-            return response.data;
-        })
-        .then((response) => {
-            if (!response) return
-            this.props.toggleUserProfileIsLoaded(true)
-        })
+        this.props.setUserProfileObjInState(this.props.router.params.userId)
     }
 
     render() {
-        if (!this.props.userProfileIsLoaded) {
-            return <Preloader />;
+        if (this.props.preloaderIsToggledOn) {
+            return <Preloader /> 
         }
-
-       return <UsersProfilePage {...this.props} />
+        return <UsersProfilePage {...this.props} />
     }
 }
-
+// проблема в том, что профиль ещё не загрузился, а начинается отрисовка - надо остановить отрисовку до тех пор, пока не загрузится
 
 function mapStateToProps(state) {
-    let UsersProfilePageState = state.UsersProfilePage;
     return {
-       ...UsersProfilePageState.userObj,
-       userProfileIsLoaded: UsersProfilePageState.userProfileIsLoaded,
+        ...state.UsersProfilePage.userObj,
+        userProfileIsLoaded: state.UsersProfilePage.userProfileIsLoaded,
     }
 }
-
 const dispatchToPropsObj = {
     setUsersPage,
-    toggleUserProfileIsLoaded
+    toggleUserProfileIsLoaded,
+    togglePreloader,
+    ...UserProfilePageThunks,
 }
 
-const UsersProfilePageWithRouter = withRouter(UsersProfilePageContainer);
-
-export default connect(mapStateToProps, dispatchToPropsObj)(UsersProfilePageWithRouter);
+export default compose(
+    connect(mapStateToProps, dispatchToPropsObj),
+    withRouter,
+    withAuthRedirect,
+)(UsersProfilePageContainer)

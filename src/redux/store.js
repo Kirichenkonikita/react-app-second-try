@@ -4,12 +4,14 @@ import UsersReducer from "./reducers/Users/UsersReducer";
 import UsersProfilePageReducer from "./reducers/UsersPofilePage/UsersProfilePageReducer";
 import AuthReducer from "./reducers/otherComponents/AuthReducer";
 import { thunk as thunkMiddleware } from "redux-thunk";
+import PreloaderReducer from "./reducers/otherComponents/PreloaderReducer";
 
 const reducers = combineReducers({
     MyPosts: MyPostsReducer,
     Users: UsersReducer,
     UsersProfilePage: UsersProfilePageReducer,
     Auth: AuthReducer,
+    Preloader: PreloaderReducer,
 })
 
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));
