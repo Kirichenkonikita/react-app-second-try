@@ -13,7 +13,12 @@ export const axiosRequestsObj = {
     getCurrentAuthorisedUserDataObj() {
         return this.instance.get("auth/me")
             .then(response => {
-                return response.data.data
+                if (response.data.resultCode) {
+                    console.log(response.data.resultCode)
+                    return false
+                } else if (!response.data.responseCode) {
+                    return response.data.data
+                }
             })
     },
 
@@ -57,6 +62,11 @@ export const axiosRequestsObj = {
     setAuthorisedUserStatusByStr(str) {
         return this.instance.put(`/profile/status`, { status: str })
             .then(response => !Boolean(response.data.responseCode))
+    },
+
+    authoriseUserByFormObj(formObj) {
+        return this.instance.post(`/auth/login`, formObj)
+            .then(response => response.data)
     }
 };
 

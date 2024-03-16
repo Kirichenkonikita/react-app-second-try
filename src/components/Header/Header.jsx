@@ -2,6 +2,7 @@ import React from "react";
 import classNameObj from "./Header.module.css";
 import IsAuthorised from "../otherComponents/Auth/IsAuthorised/IsAuthorised";
 import IsNotAuthorised from "../otherComponents/Auth/IsNotAuthorised/IsNotAuthorised";
+import Login from "../otherComponents/Login/Login";
 
 function Header(props) {
     return (
@@ -11,11 +12,7 @@ function Header(props) {
                 <h1>Заголовок</h1>
             </div>
             <div>
-            {
-                props.isAuthorised
-                    ? <IsAuthorised {...props} />
-                    : <IsNotAuthorised {...props} />
-            }
+                <Login />
             </div>
         </div>
     );

@@ -2,8 +2,9 @@ import { axiosRequestsObj } from "../../../api/axiosRequests";
 
 const SET_CURRENT_AUTHORISED_USER_OBJ = `SET_CURRENT_AUTHORISED_USER_OBJ`;
 const SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ = `SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ`;
-const LOGOUT_CURRENT_AUTHORISED_USER = `LOGOUT_CURRENT_AUTHORISED_USER`;
-const SET_CURRENT_AUTHORISED_USER_STATUS = `SET_CURRENT_AUTHORISED_USER_STATUS`
+const DISMOUNT_CURRENT_AUTHORISED_USER = `DISMOUNT_CURRENT_AUTHORISED_USER`;
+const SET_CURRENT_AUTHORISED_USER_STATUS = `SET_CURRENT_AUTHORISED_USER_STATUS`;
+
 
 export function setCurrentAuthorisedUserStatus(newCurrentAuthorisedUserStatus) {
     return {
@@ -26,9 +27,9 @@ export function setCurrentAuthorisedUserProfileObj(newCurrentAuthorisedUserProfi
     }
 }
 
-export function logoutCurrentAuthorisedUser() {
+export function dismountCurrentAuthorisedUser() {
     return {
-        type: LOGOUT_CURRENT_AUTHORISED_USER,
+        type: DISMOUNT_CURRENT_AUTHORISED_USER,
     }
 }
 
@@ -66,7 +67,7 @@ export default function AuthReducer(state = initialState, action) {
                 profileIsLoaded,
                 currentAuthorisedUserProfileObj: action.newCurrentAuthorisedUserProfileObj,
             }
-        case LOGOUT_CURRENT_AUTHORISED_USER:
+        case DISMOUNT_CURRENT_AUTHORISED_USER:
             return {
                 isAuthorised: false,
                 currentAuthorisedUserProfileObj: null,
@@ -88,15 +89,18 @@ export function setInStoreAuthorisedUserObjs() {
     return dispatch => {
         axiosRequestsObj.getCurrentAuthorisedUserDataObj()
             .then(authorisedUserDataObj => {
+                if (!authorisedUserDataObj) return
+
                 dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj));
+                
                 axiosRequestsObj.getUserProfileDataObjById(authorisedUserDataObj.id)
                     .then(userProfileDataObj => {
                         dispatch(setCurrentAuthorisedUserProfileObj(userProfileDataObj))
-                        
+
                         return userProfileDataObj.userId
                     })
                     .then(userId => axiosRequestsObj.getUserStatusStrById(userId))
-                        .then(statusStr => dispatch(setCurrentAuthorisedUserStatus(statusStr)))
+                    .then(statusStr => dispatch(setCurrentAuthorisedUserStatus(statusStr)))
             })
     }
 }
@@ -104,6 +108,36 @@ export function setInStoreAuthorisedUserObjs() {
 export function setAuthorisedUserStatusByStr(str) {
     return dispatch => {
         axiosRequestsObj.setAuthorisedUserStatusByStr(str)
-        .then(isSuccessful => dispatch(setCurrentAuthorisedUserStatus(str)))
+            .then(isSuccessful => {
+                isSuccessful && dispatch(setCurrentAuthorisedUserStatus(str))
+            })
+    }
+}
+
+export function authoriseUserByFormObj(formObj) {
+    return dispatch => {
+        axiosRequestsObj.authoriseUserByFormObj(formObj)
+            .then((result => {
+                if (result.resultCode) {
+                    alert(result.messages[0])
+                } else if (!result.resultCode) {
+                    console.log(result)
+                    dispatch(setInStateAuthorisedUserObjById(result.data.userId))
+                }
+            }))
+    }
+}
+
+export function setInStateAuthorisedUserObjById(userId) {
+    return dispatch => {
+        axiosRequestsObj.getUserProfileDataObjById(userId)
+            .then(profileDataObj => {
+                dispatch(setCurrentAuthorisedUserProfileObj(profileDataObj))
+            })
+
+        axiosRequestsObj.getCurrentAuthorisedUserDataObj(userId)
+            .then(authorisedUserDataObj => {
+                dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj))
+            })
     }
 }
