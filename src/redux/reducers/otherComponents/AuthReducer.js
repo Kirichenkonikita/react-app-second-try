@@ -85,6 +85,8 @@ export default function AuthReducer(state = initialState, action) {
     }
 }
 
+/* санки */
+
 export function setInStoreAuthorisedUserObjs() {
     return dispatch => {
         axiosRequestsObj.getCurrentAuthorisedUserDataObj()
@@ -92,7 +94,7 @@ export function setInStoreAuthorisedUserObjs() {
                 if (!authorisedUserDataObj) return
 
                 dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj));
-                
+
                 axiosRequestsObj.getUserProfileDataObjById(authorisedUserDataObj.id)
                     .then(userProfileDataObj => {
                         dispatch(setCurrentAuthorisedUserProfileObj(userProfileDataObj))
@@ -119,9 +121,8 @@ export function authoriseUserByFormObj(formObj) {
         axiosRequestsObj.authoriseUserByFormObj(formObj)
             .then((result => {
                 if (result.resultCode) {
-                    alert(result.messages[0])
+                    console.log(result.messages[0])
                 } else if (!result.resultCode) {
-                    console.log(result)
                     dispatch(setInStateAuthorisedUserObjById(result.data.userId))
                 }
             }))
@@ -138,6 +139,17 @@ export function setInStateAuthorisedUserObjById(userId) {
         axiosRequestsObj.getCurrentAuthorisedUserDataObj(userId)
             .then(authorisedUserDataObj => {
                 dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj))
+            })
+    }
+}
+
+export function logOutCurrentAuthorisedUser() {
+    return dispatch => {
+        axiosRequestsObj.logOutCurrentAuthorisedUser()
+            .then(isSuccessful => {
+                if (isSuccessful) {
+                    dispatch(dismountCurrentAuthorisedUser())
+                }
             })
     }
 }

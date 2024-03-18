@@ -14,7 +14,6 @@ export const axiosRequestsObj = {
         return this.instance.get("auth/me")
             .then(response => {
                 if (response.data.resultCode) {
-                    console.log(response.data.resultCode)
                     return false
                 } else if (!response.data.responseCode) {
                     return response.data.data
@@ -67,6 +66,11 @@ export const axiosRequestsObj = {
     authoriseUserByFormObj(formObj) {
         return this.instance.post(`/auth/login`, formObj)
             .then(response => response.data)
+    },
+
+    logOutCurrentAuthorisedUser() {
+        return this.instance.delete(`/auth/login`)
+            .then(response => !Boolean(response.data.responseCode))
     }
 };
 

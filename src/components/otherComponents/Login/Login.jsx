@@ -3,11 +3,12 @@ import classNameObj from "./Login.module.css"
 import { connect } from "react-redux"
 import { authoriseUserByFormObj } from "../../../redux/reducers/otherComponents/AuthReducer"
 import IsAuthorised from "../Auth/IsAuthorised/IsAuthorised"
+import { valueRequiered } from "../../../formUtilities/validators"
 
 function Login(props) {
     return (
         <form className={classNameObj.LoginContainer} onSubmit={props.handleSubmit}>
-            <Field name="email" component="input" placeholder="Login" />
+            <Field name="email" component="input" placeholder="Login" validate={[valueRequiered]}/>
             <Field name="password" component="input" placeholder="Password" />
             <Field className={classNameObj.rememberMeCheckbox} name="rememberMe" component="input" type="checkbox" />
             <label for="rememberMe">Запомнить меня</label>

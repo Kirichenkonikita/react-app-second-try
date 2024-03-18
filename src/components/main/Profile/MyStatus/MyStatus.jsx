@@ -1,14 +1,16 @@
 import React from "react";
 import classNameObj from "./MyStatus.module.css";
+import { connect } from "react-redux";
+import { setAuthorisedUserStatusByStr } from "../../../../redux/reducers/otherComponents/AuthReducer";
 
-export default class MyStatus extends React.Component {
+class MyStatus extends React.Component {
     state = {
         inEditMode: false,
         statusStr: this.props.currentAuthorisedUserStatus,
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.currentAuthorisedUserStatus !== this.state.statusStr) {
+        if (prevProps.currentAuthorisedUserStatus !== this.state.statusStr && this.inEditMode) {
             this.setState({
                 statusStr: this.state.statusStr
             })
@@ -47,9 +49,14 @@ export default class MyStatus extends React.Component {
                         </div>)
                         : <p onClick={() => this.toggleEditMode(true)}>
                             {this.props.currentAuthorisedUserStatus || "Статус не установлен (глобальный стейт пустой)"}
-                            </p>
+                        </p>
                 }
             </div>
         )
     }
 }
+
+export default connect(
+    state => ({ currentAuthorisedUserStatus: state.Auth.currentAuthorisedUserStatus }),
+    { setAuthorisedUserStatusByStr }
+)(MyStatus)
