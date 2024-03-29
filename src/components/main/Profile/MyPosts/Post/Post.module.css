@@ -1,0 +1,22 @@
+.PostContainer {
+    display: grid;
+    grid-template-columns: auto(5, 1fr);
+    grid-template-areas: 
+    "img p p p p";
+    gap: 10px;
+
+    border: 2px solid black;
+}
+
+.PostContainer img {
+    height: 50px;
+    width: 50px;
+
+    grid-area: img;
+    place-self: center;
+}
+
+.PostContainer {
+    grid-area: p;
+
+}

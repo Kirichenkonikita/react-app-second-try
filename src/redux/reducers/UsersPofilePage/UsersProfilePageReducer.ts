@@ -1,4 +1,4 @@
-import { ProfileDataObjType } from './../../../generalObjectTypes/generalObjectTypes';
+import { ProfileDataObjType } from '../../../generalObjectTypes/generalObjectTypes';
 import { axiosRequestsObj } from "../../../api/axiosRequests";
 import { GetActionsTypesFromActionCreatorObject } from '../../../api/getActionTypesFromACObject';
 
@@ -38,7 +38,7 @@ type UsersProfilePageStateType = typeof initialState
 
 // reducer itself
 
-export default function UsersProfilePageReducer(state: UsersProfilePageStateType = initialState, action: ActionTypes): UsersProfilePageStateType {
+export default function UsersProfilePageReducer(state: UsersProfilePageStateType = initialState, action: any): UsersProfilePageStateType {
     switch (action.type) {
         case SET_USER_PAGE:
             {
@@ -60,8 +60,8 @@ export default function UsersProfilePageReducer(state: UsersProfilePageStateType
 }
 
 export const UserProfilePageThunksObj = {
-    setUserProfileObjInState(userId) {
-        return dispatch => {
+    setUserProfileObjInState(userId: number) {
+        return (dispatch: any) => {
             dispatch(UsersProfilePageActionCreatorsObj.toggleUserProfileIsLoaded(false))
             axiosRequestsObj.getUserProfileDataObjById(userId)
                 .then(userObj => {
