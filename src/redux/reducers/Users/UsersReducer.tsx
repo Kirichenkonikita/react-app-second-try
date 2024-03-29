@@ -1,5 +1,7 @@
 import { axiosRequestsObj } from "../../../api/axiosRequests";
-
+import { GetActionsTypesFromActionCreatorObject } from "../../../api/getActionTypesFromACObject";
+import { UsersPageUserObjType } from "../../../generalObjectTypes/generalObjectTypes";
+// constants
 const SET_USERS = "SET_USERS";
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
@@ -8,84 +10,81 @@ const SET_USERS_AMOUNT_DISPLAYED = "SET_USERS_AMOUNT_DISPLAYED";
 const SET_CURRENT_ACTIVE_PAGE = "SET_CURRENT_ACTIVE_PAGE";
 const SET_IS_LOADING = "SET_IS_LOADING";
 const TOGGLE_FOLLOWING_IN_PROCESS = "TOGGLE_FOLLOWING_IN_PROCESS";
-
-export function setUsers(usersArr) {
-    return {
-        type: SET_USERS,
-        usersArr,
-    }
+// action creators object & its type
+export const UsersActionCreatorsObj = {
+    setUsers(usersArr: Array<UsersPageUserObjType>) {
+        return {
+            type: SET_USERS,
+            usersArr,
+        } as const
+    },
+    follow(id: number) {
+        return {
+            type: FOLLOW,
+            id,
+        } as const
+    },
+    unFollow(id: number) {
+        return {
+            type: UNFOLLOW,
+            id,
+        } as const
+    },
+    setTotalUsersAmount(totalUsersCount: number | string) {
+        return {
+            type: SET_TOTAL_USERS_COUNT,
+            totalUsersCount,
+        } as const
+    },
+    setUsersAmountDisplayed(usersAmountDisplayed: number | string) {
+        return {
+            type: SET_USERS_AMOUNT_DISPLAYED,
+            usersAmountDisplayed,
+        } as const
+    },
+    setCurrentActivePage(currentActivePage: number | string) {
+        return {
+            type: SET_CURRENT_ACTIVE_PAGE,
+            currentActivePage,
+        } as const
+    },
+    setIsLoading(boolean: boolean) {
+        return {
+            type: SET_IS_LOADING,
+            isLoading: boolean,
+        } as const
+    },
+    toggleFollowingInProcess(
+        fetchingIsStarted: boolean,
+        userIdFollowingProcessed: number
+    ) {
+        return {
+            type: TOGGLE_FOLLOWING_IN_PROCESS,
+            fetchingIsStarted,
+            userIdFollowingProcessed,
+        } as const
+    },
 }
-export function follow(id) {
-    return {
-        type: FOLLOW,
-        id,
-    }
-}
-export function unFollow(id) {
-    return {
-        type: UNFOLLOW,
-        id,
-    }
-}
-export function setTotalUsersAmount(totalUsersCount) {
-    return {
-        type: SET_TOTAL_USERS_COUNT,
-        totalUsersCount,
-    }
-}
-export function setUsersAmountDisplayed(usersAmountDisplayed) {
-    return {
-        type: SET_USERS_AMOUNT_DISPLAYED,
-        usersAmountDisplayed,
-    }
-}
-export function setCurrentActivePage(currentActivePage) {
-    return {
-        type: SET_CURRENT_ACTIVE_PAGE,
-        currentActivePage,
-    }
-}
-export function setIsLoading(boolean) {
-    return {
-        type: SET_IS_LOADING,
-        isLoading: boolean,
-    }
-}
-
-export function toggleFollowingInProcess(fetchingIsStarted, userIdFollowingProcessed) {
-    return {
-        type: TOGGLE_FOLLOWING_IN_PROCESS,
-        fetchingIsStarted,
-        userIdFollowingProcessed,
-    }
-}
-
+type UsersActionTypes = GetActionsTypesFromActionCreatorObject<typeof UsersActionCreatorsObj>
+// initial state & its type
 const initialState = {
-    usersArr: [
-        {
-            "name": "Leshen",
-            "id": 30646,
-            "uniqueUrlName": null,
-            "photos": {
-                "small": null,
-                "large": null
-            },
-            "status": null,
-            "followed": false
-        },
-    ],
+    usersArr: [] as Array<UsersPageUserObjType>,
+    isLoading: false,
     initialisationFinished: false,
     totalUsersCount: 0,
     usersAmountDisplayed: 20,
     pagesRequiredToDisplay: 1,
     currentActivePage: 1,
     pagesToDisplay: 20,
-    isLoading: false,
-    usersIdsFollowingInProcessArr: [],
+    usersIdsFollowingInProcessArr: [] as Array<number>,
     possibleAmountUsersDisplayedArr: [5, 10, 20, 100],
 };
-
-export default function UsersReducer(state = initialState, action) {
+type UsersStateType = typeof initialState
+// reducer itself
+export default function UsersReducer(
+    state: UsersStateType = initialState,
+    action: UsersActionTypes
+): UsersStateType {
     switch (action.type) {
         case SET_USERS:
             {
@@ -137,7 +136,7 @@ export default function UsersReducer(state = initialState, action) {
                 let newTotalUsersCount = action.totalUsersCount;
                 let newPagesToDisplay = 0;
                 let newPagesRequiredToDisplay = Math.ceil(
-                    newTotalUsersCount / state.usersAmountDisplayed
+                    +newTotalUsersCount / state.usersAmountDisplayed
                 );
 
                 newPagesRequiredToDisplay > 10 ?
@@ -147,7 +146,7 @@ export default function UsersReducer(state = initialState, action) {
 
                 return {
                     ...state,
-                    totalUsersCount: newTotalUsersCount,
+                    totalUsersCount: +newTotalUsersCount,
                     pagesRequiredToDisplay: newPagesRequiredToDisplay,
                     pagesToDisplay: newPagesToDisplay,
                 }
@@ -157,7 +156,7 @@ export default function UsersReducer(state = initialState, action) {
                 let newPagesToDisplay = 0;
                 let newUsersAmountDisplayed = action.usersAmountDisplayed;
                 let newPagesRequiredToDisplay = Math.ceil(
-                    state.totalUsersCount / newUsersAmountDisplayed
+                    state.totalUsersCount / +newUsersAmountDisplayed
                 )
                 if (newPagesRequiredToDisplay === state.pagesRequiredToDisplay) {
                     return state
@@ -169,14 +168,14 @@ export default function UsersReducer(state = initialState, action) {
                     ...state,
                     pagesRequiredToDisplay: newPagesRequiredToDisplay,
                     pagesToDisplay: newPagesToDisplay,
-                    usersAmountDisplayed: newUsersAmountDisplayed,
+                    usersAmountDisplayed: +newUsersAmountDisplayed,
                 }
             }
         case SET_CURRENT_ACTIVE_PAGE:
             {
                 return {
                     ...state,
-                    currentActivePage: action.currentActivePage,
+                    currentActivePage: +action.currentActivePage,
                 }
             }
         case SET_IS_LOADING:
@@ -200,57 +199,54 @@ export default function UsersReducer(state = initialState, action) {
             return state;
     }
 }
-// Санки
+// thunks
 export const UsersThunks = {
-    followUserById(userId) {
-        return dispatch => {
-            dispatch(toggleFollowingInProcess(true, userId))
+    followUserById(userId: number) {
+        return (dispatch: any) => {
+            dispatch(UsersActionCreatorsObj.toggleFollowingInProcess(true, userId))
             axiosRequestsObj.followUserById(userId)
                 .then(isSuccessful => {
                     if (isSuccessful) {
-                        dispatch(follow(userId))
-                        dispatch(toggleFollowingInProcess(false, userId))
+                        dispatch(UsersActionCreatorsObj.follow(userId))
+                        dispatch(UsersActionCreatorsObj.toggleFollowingInProcess(false, userId))
                     }
                 })
         }
     },
-
-    unFollowUserById(userId) {
-        return dispatch => {
-            dispatch(toggleFollowingInProcess(true, userId))
+    unFollowUserById(userId: number) {
+        return (dispatch: any) => {
+            dispatch(UsersActionCreatorsObj.toggleFollowingInProcess(true, userId))
             axiosRequestsObj.unFollowUserById(userId)
                 .then(isSuccessful => {
                     if (isSuccessful) {
-                        dispatch(unFollow(userId))
-                        dispatch(toggleFollowingInProcess(false, userId))
+                        dispatch(UsersActionCreatorsObj.unFollow(userId))
+                        dispatch(UsersActionCreatorsObj.toggleFollowingInProcess(false, userId))
                     }
                 })
         }
     },
-
     reloadUsersArrayByCountPageTerm(
-        usersAmountDisplayed,
-        currentActivePage,
-        term
+        usersAmountDisplayed: number,
+        currentActivePage: number,
+        term?: number
     ) {
-        return dispatch => {
-            dispatch(setIsLoading(true))
+        return (dispatch: any) => {
+            dispatch(UsersActionCreatorsObj.setIsLoading(true))
             axiosRequestsObj.getUsersObjByCountPageTerm(usersAmountDisplayed, currentActivePage, term)
                 .then(usersObj => {
                     if (usersObj.error) alert(usersObj.error)
-                    dispatch(setTotalUsersAmount(usersObj.totalCount))
-                    dispatch(setUsers(usersObj.items))
-                    dispatch(setIsLoading(false))
+                    dispatch(UsersActionCreatorsObj.setTotalUsersAmount(usersObj.totalCount))
+                    dispatch(UsersActionCreatorsObj.setUsers(usersObj.items))
+                    dispatch(UsersActionCreatorsObj.setIsLoading(false))
                 })
         }
     },
-
     changeActivePageByInt(
-        newActivePage,
-        usersStateAmountDisplayed,
+        newActivePage: number,
+        usersStateAmountDisplayed: number,
     ) {
-        return dispatch => {
-            dispatch(setCurrentActivePage(newActivePage));
+        return (dispatch: any) => {
+            dispatch(UsersActionCreatorsObj.setCurrentActivePage(newActivePage));
 
             dispatch(UsersThunks.reloadUsersArrayByCountPageTerm(
                 usersStateAmountDisplayed,
@@ -258,27 +254,25 @@ export const UsersThunks = {
             ))
         }
     },
-
     сhangeAmountDisplayedByInt(
-        usersNewAmountDisplayed,
-        currentStateActivePage
+        usersNewAmountDisplayed: number,
+        currentStateActivePage: number
     ) {
-        return dispatch => {
-            dispatch(setUsersAmountDisplayed(usersNewAmountDisplayed))
+        return (dispatch: any) => {
+            dispatch(UsersActionCreatorsObj.setUsersAmountDisplayed(usersNewAmountDisplayed))
             dispatch(UsersThunks.reloadUsersArrayByCountPageTerm(
                 usersNewAmountDisplayed,
                 currentStateActivePage
             ))
         }
     },
-
     mapArrToUsersPerPageButtonsArr(
-        arr,
-        classNameObj,
-        stateUsersAmountDisplayed,
-        stateCurrentActivePage
+        arr: Array<number>,
+        classNameObj: any,
+        stateUsersAmountDisplayed: number,
+        stateCurrentActivePage: number
     ) {
-        return dispatch => {
+        return (dispatch: any) => {
             return arr.map(usersAmountDisplayed => {
                 let className;
 
@@ -303,14 +297,13 @@ export const UsersThunks = {
             })
         }
     },
-
     createPageButtonsArrByPagesToDisplay(
-        pagesToDisplay,
-        currentActivePage,
-        classNameObj,
-        stateUsersAmountDisplayed
+        pagesToDisplay: number,
+        currentActivePage: number,
+        classNameObj: any,
+        stateUsersAmountDisplayed: number
     ) {
-        return dispatch => {
+        return (dispatch: any) => {
             let pagesArr = [];
 
             for (let i = 1; i <= pagesToDisplay; i++) {

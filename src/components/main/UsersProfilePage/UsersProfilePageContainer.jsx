@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { UsersProfilePageActionCreatorsObj, UserProfilePageThunksObj } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 import { withRouter } from "../../..";
 import React from "react";
-import { togglePreloader } from "../../../redux/reducers/otherComponents/PreloaderReducer";
+import { PreloaderActionCreators } from "../../../redux/reducers/otherComponents/PreloaderReducer";
 import withAuthRedirect from "../../../hoc/withAuthRedirect"
 import { compose } from "redux";
 import UsersProfilePage from "./UsersProfilePage";
@@ -29,7 +29,7 @@ function mapStateToProps(state) {
 }
 const dispatchToPropsObj = {
     ...UsersProfilePageActionCreatorsObj,
-    togglePreloader,
+    ...PreloaderActionCreators,
     ...UserProfilePageThunksObj,
 }
 

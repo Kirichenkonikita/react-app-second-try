@@ -1,44 +1,37 @@
 import { ProfileDataObjType } from '../../../generalObjectTypes/generalObjectTypes';
 import { axiosRequestsObj } from "../../../api/axiosRequests";
 import { GetActionsTypesFromActionCreatorObject } from '../../../api/getActionTypesFromACObject';
-
 // constants
-
 const SET_USER_PAGE = "SET_USER_PAGE";
 const TOGGLE_USER_PROFILE_IS_LOADED = "TOGGLE_USER_PROFILE_IS_LOADED";
-
 // action creator object & its type
-
 export const UsersProfilePageActionCreatorsObj = {
     setUsersPage(newUserObj: ProfileDataObjType) {
         return {
             type: SET_USER_PAGE,
             newUserObj,
-        }
+        } as const
     },
 
     toggleUserProfileIsLoaded(userProfileIsLoaded: boolean) {
         return {
             type: TOGGLE_USER_PROFILE_IS_LOADED,
             userProfileIsLoaded,
-        }
+        } as const
     }
 }
-
 type ActionTypes = GetActionsTypesFromActionCreatorObject<typeof UsersProfilePageActionCreatorsObj>
-
 // initial state & its type
-
 const initialState = {
     userObj: null as null | ProfileDataObjType,
     userProfileIsLoaded: false as boolean,
 }
-
 type UsersProfilePageStateType = typeof initialState
-
 // reducer itself
-
-export default function UsersProfilePageReducer(state: UsersProfilePageStateType = initialState, action: any): UsersProfilePageStateType {
+export default function UsersProfilePageReducer(
+    state: UsersProfilePageStateType = initialState,
+    action: ActionTypes
+): UsersProfilePageStateType {
     switch (action.type) {
         case SET_USER_PAGE:
             {

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import classNameObj from "./IsAuthorised.module.css";
-import { dismountCurrentAuthorisedUser, logOutCurrentAuthorisedUser } from "../../../../redux/reducers/otherComponents/AuthReducer";
+import { AuthActionCreatorsObj } from "../../../../redux/reducers/otherComponents/AuthReducer";
 
 function IsAuthorised(props: any) {
     const currentAuthorisedUserObj = props.currentAuthorisedUserObj;
@@ -17,4 +17,4 @@ function IsAuthorised(props: any) {
 }
 
 
-export default connect((state: any) => ({...state.Auth}), {dismountCurrentAuthorisedUser, logOutCurrentAuthorisedUser})(IsAuthorised);
+export default connect((state: any) => ({...state.Auth}), {...AuthActionCreatorsObj})(IsAuthorised);

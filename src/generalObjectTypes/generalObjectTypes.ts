@@ -32,3 +32,14 @@ export type ProfileDataObjType = {
         "large": null | string
     }
 }
+
+export type UsersPageUserObjType = {
+    "name": string
+    "id": number
+    "photos": {
+        "small": null | string
+        "large": null | string
+    }
+    "status": null | string
+    "followed": boolean
+}

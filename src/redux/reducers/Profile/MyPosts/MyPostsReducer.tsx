@@ -13,7 +13,7 @@ export const myPostsActionCreatorsObj = {
         return {
             type: ADD_POST,
             newPostText
-        }
+        } as const
     }
 }
 
@@ -30,7 +30,10 @@ type InitialStateType = typeof initialState
 
 // reducer itself
 
-export default function MyPostsReducer(state: InitialStateType = initialState, action: ActionTypes): InitialStateType {
+export default function MyPostsReducer(
+    state: InitialStateType = initialState,
+    action: ActionTypes
+): InitialStateType {
     switch (action.type) {
         case ADD_POST:
             return {

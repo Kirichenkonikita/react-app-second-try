@@ -1,69 +1,39 @@
 import { AuthorisedUserObjType, ProfileDataObjType } from './../../../generalObjectTypes/generalObjectTypes';
 import { axiosRequestsObj } from "../../../api/axiosRequests";
+import { GetActionsTypesFromActionCreatorObject } from '../../../api/getActionTypesFromACObject';
 // constants
 const SET_CURRENT_AUTHORISED_USER_OBJ = `SET_CURRENT_AUTHORISED_USER_OBJ`;
 const SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ = `SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ`;
 const DISMOUNT_CURRENT_AUTHORISED_USER = `DISMOUNT_CURRENT_AUTHORISED_USER`;
 const SET_CURRENT_AUTHORISED_USER_STATUS = `SET_CURRENT_AUTHORISED_USER_STATUS`;
-// action creators
-export function setCurrentAuthorisedUserStatus(newCurrentAuthorisedUserStatus: string) {
-    return {
-        type: SET_CURRENT_AUTHORISED_USER_STATUS,
-        newCurrentAuthorisedUserStatus,
-    }
+// action creator object
+export const AuthActionCreatorsObj = {
+    setCurrentAuthorisedUserStatus(newCurrentAuthorisedUserStatus: string) {
+        return {
+            type: SET_CURRENT_AUTHORISED_USER_STATUS,
+            newCurrentAuthorisedUserStatus,
+        } as const
+    },
+    setCurrentAuthorisedUserObj(newCurrentAuthorisedUserObj: AuthorisedUserObjType) {
+        return {
+            type: SET_CURRENT_AUTHORISED_USER_OBJ,
+            newCurrentAuthorisedUserObj,
+        } as const
+    },
+    setCurrentAuthorisedUserProfileObj(newCurrentAuthorisedUserProfileObj: ProfileDataObjType) {
+        return {
+            type: SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ,
+            newCurrentAuthorisedUserProfileObj,
+        } as const
+    },
+    dismountCurrentAuthorisedUser() {
+        return {
+            type: DISMOUNT_CURRENT_AUTHORISED_USER,
+        } as const
+    },
 }
-
-export function setCurrentAuthorisedUserObj(newCurrentAuthorisedUserObj: object) {
-    return {
-        type: SET_CURRENT_AUTHORISED_USER_OBJ,
-        newCurrentAuthorisedUserObj,
-    }
-}
-
-export function setCurrentAuthorisedUserProfileObj(newCurrentAuthorisedUserProfileObj: object) {
-    return {
-        type: SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ,
-        newCurrentAuthorisedUserProfileObj,
-    }
-}
-
-export function dismountCurrentAuthorisedUser() {
-    return {
-        type: DISMOUNT_CURRENT_AUTHORISED_USER,
-    }
-}
-// action types
-interface SetCurrentAuthorisedUserObjActionInterface {
-    type: `SET_CURRENT_AUTHORISED_USER_OBJ`
-    newCurrentAuthorisedUserStatus: string
-}
-
-interface SetCurrentAuthorisedUserObjActionInterface {
-    type: `SET_CURRENT_AUTHORISED_USER_OBJ`
-    newCurrentAuthorisedUserObj: AuthorisedUserObjType
-}
-
-interface SetCurrentAuthorisedUserProfileObjActionInterface {
-    type: `SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ`
-    newCurrentAuthorisedUserProfileObj: ProfileDataObjType
-}
-
-interface SetCurrentAuthorisedUserStatusInterface {
-    type: `SET_CURRENT_AUTHORISED_USER_STATUS`
-    newCurrentAuthorisedUserStatus: string
-}
-
-interface DismountCurrentAuthorisedUserInterface {
-    type: `DISMOUNT_CURRENT_AUTHORISED_USER`
-}
-
-type SummarisedActionType =
-    SetCurrentAuthorisedUserObjActionInterface
-    | SetCurrentAuthorisedUserObjActionInterface
-    | SetCurrentAuthorisedUserProfileObjActionInterface
-    | SetCurrentAuthorisedUserStatusInterface
-    | DismountCurrentAuthorisedUserInterface
-
+type ActionTypes = GetActionsTypesFromActionCreatorObject<typeof AuthActionCreatorsObj>
+// initial state
 const initialState = {
     isAuthorised: false as boolean,
     profileIsLoaded: false as boolean,
@@ -73,7 +43,10 @@ const initialState = {
 }
 export type AuthReducerStateType = typeof initialState
 // reducer itself
-export default function AuthReducer(state: AuthReducerStateType = initialState, action: SummarisedActionType): AuthReducerStateType {
+export default function AuthReducer(
+    state: AuthReducerStateType = initialState,
+    action: ActionTypes
+): AuthReducerStateType {
     switch (action.type) {
         case SET_CURRENT_AUTHORISED_USER_OBJ:
             {
@@ -125,16 +98,16 @@ export function setInStoreAuthorisedUserObjs(): Function {
             .then(authorisedUserDataObj => {
                 if (!authorisedUserDataObj) return
 
-                dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj));
+                dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserObj(authorisedUserDataObj));
 
                 axiosRequestsObj.getUserProfileDataObjById(authorisedUserDataObj.id)
                     .then(userProfileDataObj => {
-                        dispatch(setCurrentAuthorisedUserProfileObj(userProfileDataObj))
+                        dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserProfileObj(userProfileDataObj))
 
                         return userProfileDataObj.userId
                     })
                     .then(userId => axiosRequestsObj.getUserStatusStrById(userId))
-                    .then(statusStr => dispatch(setCurrentAuthorisedUserStatus(statusStr)))
+                    .then(statusStr => dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserStatus(statusStr)))
             })
     }
 }
@@ -143,7 +116,7 @@ export function setAuthorisedUserStatusByStr(str: string): Function {
     return (dispatch: Function) => {
         axiosRequestsObj.setAuthorisedUserStatusByStr(str)
             .then(isSuccessful => {
-                isSuccessful && dispatch(setCurrentAuthorisedUserStatus(str))
+                isSuccessful && dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserStatus(str))
             })
     }
 }
@@ -165,12 +138,12 @@ export function setInStateAuthorisedUserObjById(userId: number) {
     return (dispatch: Function) => {
         axiosRequestsObj.getUserProfileDataObjById(userId)
             .then(ProfileDataObjType => {
-                dispatch(setCurrentAuthorisedUserProfileObj(ProfileDataObjType))
+                dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserProfileObj(ProfileDataObjType))
             })
 
         axiosRequestsObj.getCurrentAuthorisedUserDataObj()
             .then(authorisedUserDataObj => {
-                dispatch(setCurrentAuthorisedUserObj(authorisedUserDataObj))
+                dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserObj(authorisedUserDataObj))
             })
     }
 }
@@ -180,7 +153,7 @@ export function logOutCurrentAuthorisedUser() {
         axiosRequestsObj.logOutCurrentAuthorisedUser()
             .then(isSuccessful => {
                 if (isSuccessful) {
-                    dispatch(dismountCurrentAuthorisedUser())
+                    dispatch(AuthActionCreatorsObj.dismountCurrentAuthorisedUser())
                 }
             })
     }
