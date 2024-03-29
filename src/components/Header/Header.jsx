@@ -1,7 +1,5 @@
 import React from "react";
 import classNameObj from "./Header.module.css";
-import IsAuthorised from "../otherComponents/Auth/IsAuthorised/IsAuthorised";
-import IsNotAuthorised from "../otherComponents/Auth/IsNotAuthorised/IsNotAuthorised";
 import Login from "../otherComponents/Login/Login";
 
 function Header(props) {

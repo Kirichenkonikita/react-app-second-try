@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import Users from "./Users/Users";
 import { follow, UsersThunks, setCurrentActivePage, setIsLoading, setTotalUsersAmount, setUsers, setUsersAmountDisplayed, unFollow, toggleFollowingInProcess } from "../../../redux/reducers/Users/UsersReducer";
-import { setUsersPage } from "../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
+import { UsersProfilePageActionCreatorsObj } from "../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 
 function mapStateToProps(state) {
     const UsersState = state.Users;
@@ -28,7 +28,7 @@ const mapDispatchToProps = {
     setUsersAmountDisplayed,
     setCurrentActivePage,
     setIsLoading,
-    setUsersPage,
+    setUsersPage: UsersProfilePageActionCreatorsObj.setUsersPage,
     toggleFollowingInProcess,
     ...UsersThunks,
 }

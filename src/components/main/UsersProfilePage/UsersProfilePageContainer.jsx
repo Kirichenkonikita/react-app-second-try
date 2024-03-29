@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { setUsersPage, toggleUserProfileIsLoaded, UserProfilePageThunks } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
+import { UsersProfilePageActionCreatorsObj, UserProfilePageThunksObj } from "./../../../redux/reducers/UsersPofilePage/UsersProfilePageReducer";
 import { withRouter } from "../../..";
 import React from "react";
 import { togglePreloader } from "../../../redux/reducers/otherComponents/PreloaderReducer";
@@ -20,7 +20,6 @@ class UsersProfilePageContainer extends React.Component {
         return <UsersProfilePage {...this.props} />
     }
 }
-// проблема в том, что профиль ещё не загрузился, а начинается отрисовка - надо остановить отрисовку до тех пор, пока не загрузится
 
 function mapStateToProps(state) {
     return {
@@ -29,10 +28,9 @@ function mapStateToProps(state) {
     }
 }
 const dispatchToPropsObj = {
-    setUsersPage,
-    toggleUserProfileIsLoaded,
+    ...UsersProfilePageActionCreatorsObj,
     togglePreloader,
-    ...UserProfilePageThunks,
+    ...UserProfilePageThunksObj,
 }
 
 export default compose(
