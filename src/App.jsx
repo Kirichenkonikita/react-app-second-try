@@ -8,10 +8,10 @@ import UsersProfilePageContainer from './components/main/UsersProfilePage/UsersP
 import HeaderContainer from './components/Header/HeaderContainer';
 import ProfileContainer from './components/main/Profile/ProfileContainer';
 import Login from './components/otherComponents/Login/Login';
+import Preloader from './components/otherComponents/Preloader/Preloader';
 
 function App() {
   return (
-
     <BrowserRouter>
       <Provider store={store}>
         <div className={classNameObj.appContainer}>

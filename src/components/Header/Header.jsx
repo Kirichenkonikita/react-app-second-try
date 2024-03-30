@@ -1,4 +1,3 @@
-import React from "react";
 import classNameObj from "./Header.module.css";
 import Login from "../otherComponents/Login/Login";
 

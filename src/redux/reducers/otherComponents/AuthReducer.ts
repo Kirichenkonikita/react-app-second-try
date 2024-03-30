@@ -6,6 +6,7 @@ const SET_CURRENT_AUTHORISED_USER_OBJ = `SET_CURRENT_AUTHORISED_USER_OBJ`;
 const SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ = `SET_CURRENT_AUTHORISED_USER_PROFILE_OBJ`;
 const DISMOUNT_CURRENT_AUTHORISED_USER = `DISMOUNT_CURRENT_AUTHORISED_USER`;
 const SET_CURRENT_AUTHORISED_USER_STATUS = `SET_CURRENT_AUTHORISED_USER_STATUS`;
+const TOGGLE_INITIALIZED_IS_FINISHED = `TOGGLE_INITIALIZED_IS_FINISHED`;
 // action creator object
 export const AuthActionCreatorsObj = {
     setCurrentAuthorisedUserStatus(newCurrentAuthorisedUserStatus: string) {
@@ -31,10 +32,17 @@ export const AuthActionCreatorsObj = {
             type: DISMOUNT_CURRENT_AUTHORISED_USER,
         } as const
     },
+    toggleInitializedIsFinished(isFinished: boolean) {
+        return {
+        type: TOGGLE_INITIALIZED_IS_FINISHED,
+        initializationIsFinished: isFinished,
+        } as const
+    }
 }
 type ActionTypes = GetActionsTypesFromActionCreatorObject<typeof AuthActionCreatorsObj>
 // initial state
 const initialState = {
+    initializationIsFinished: false,
     isAuthorised: false as boolean,
     profileIsLoaded: false as boolean,
     currentAuthorisedUserObj: null as null | AuthorisedUserObjType,
@@ -48,6 +56,13 @@ export default function AuthReducer(
     action: ActionTypes
 ): AuthReducerStateType {
     switch (action.type) {
+        case TOGGLE_INITIALIZED_IS_FINISHED:
+            {
+                return {
+                    ...state,
+                    initializationIsFinished: action.initializationIsFinished,
+                }
+            }
         case SET_CURRENT_AUTHORISED_USER_OBJ:
             {
                 let isAuthorised = false;
@@ -94,12 +109,11 @@ export default function AuthReducer(
 // thunks
 export function setInStoreAuthorisedUserObjs(): Function {
     return (dispatch: Function) => {
+        // auth/me request
         axiosRequestsObj.getCurrentAuthorisedUserDataObj()
             .then(authorisedUserDataObj => {
-                if (!authorisedUserDataObj) return
-
+                if (!authorisedUserDataObj) return "User is not authorized"
                 dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserObj(authorisedUserDataObj));
-
                 axiosRequestsObj.getUserProfileDataObjById(authorisedUserDataObj.id)
                     .then(userProfileDataObj => {
                         dispatch(AuthActionCreatorsObj.setCurrentAuthorisedUserProfileObj(userProfileDataObj))

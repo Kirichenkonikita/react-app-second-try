@@ -1,5 +1,4 @@
 import { GetActionsTypesFromActionCreatorObject } from "../../../api/getActionTypesFromACObject"
-
 // constants
 const TOGGLE_PRELOADER = "TOGGLE_PRELOADER"
 // action creators

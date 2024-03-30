@@ -15,9 +15,7 @@ const reducers = combineReducers({
     Preloader: PreloaderReducer,
     form: formReducer
 })
-
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));
-
-// export type StoreType = typeof store.getState()
-
+const state = store.getState()
+export type StateType = typeof state
 export default store;
