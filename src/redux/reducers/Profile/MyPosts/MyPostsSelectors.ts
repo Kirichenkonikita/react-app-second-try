@@ -13,5 +13,3 @@ export function getMyPostsPostsArr2(state: StateType): Array<MyPostsType> {
 export const getMyPostsPostsArr = createSelector(
     [(state: StateType) => state.MyPosts.postsArr],
     (postsArr) => postsArr.filter(item => true))
-// fakeCounter
-setInterval(() => store.dispatch({ type: `FAKE_STATE_CHANGE` }), 5000)
